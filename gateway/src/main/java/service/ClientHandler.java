@@ -36,23 +36,23 @@ public class ClientHandler extends Thread {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
            BufferedReader bufferedReader = new BufferedReader(in);
 
-            int protocolChoice = Integer.parseInt(bufferedReader.readLine());
             String sessionId = bufferedReader.readLine();
 
             int continuePlaying = Integer.parseInt(bufferedReader.readLine());
-            System.out.println("continue playing " + continuePlaying);
-            while (continuePlaying != 3) {
+            int protocolChoice = Integer.parseInt(bufferedReader.readLine());
+
+            //  System.out.println("continue playing " + continuePlaying);
+            while (protocolChoice != 3) {
                 System.out.println(" playing ");
                 ServerResponse serverResponse = new ServerResponse();
 
                 if (protocolChoice == 1) {
                     String gameId = String.valueOf(UUID.randomUUID());
-                    GameOperations operations = (GameOperations) Naming.lookup("rmi://localhost:5015/gameOperations");
+                    GameOperations operations = (GameOperations) Naming.lookup("rmi://localhost:5005/gameOperations");
                     if (continuePlaying == 2) {
                         serverResponse = operations.getHistory(sessionId);
                         objectOutputStream.writeObject(serverResponse);
                     }
-
                     else{
                         for (int i = 0; i < 3; i++) {
                             String clientChoice = bufferedReader.readLine();
@@ -60,16 +60,12 @@ public class ClientHandler extends Thread {
                             objectOutputStream.writeObject(serverResponse);
                             if (serverResponse.getGame().getWinner() != null)
                                 break;
-
                         }
                     }
-
-
                 } else if (protocolChoice == 2) {
-
                     String gameId = String.valueOf(UUID.randomUUID());
                     XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-                    config.setServerURL(new URL("http://localhost:5007/xmlrpc"));
+                    config.setServerURL(new URL("http://localhost:5006/xmlrpc"));
                     XmlRpcClient client = new XmlRpcClient();
                     client.setConfig(config);
                     if (continuePlaying == 2) {
@@ -79,20 +75,22 @@ public class ClientHandler extends Thread {
 
                     } else
                         for (int i = 0; i < 3; i++) {
-
-                                serverResponse = (ServerResponse) client.execute("Game.playRound",
-                                        new Object[] { bufferedReader.readLine(), sessionId, gameId });
-
-                          //  printWriter.println(result);
+                            String clientChoice = bufferedReader.readLine();
+                            serverResponse = (ServerResponse) client.execute("Game.playRound",
+                                        new Object[] { clientChoice, sessionId, gameId });
                             objectOutputStream.writeObject(serverResponse);
+                            if (serverResponse.getGame().getWinner() != null)
+                                break;
                         }
-
                 }
                 else {
                     throw new RuntimeException("Unknown protocol: " + protocolChoice);
                 }
 
                 continuePlaying = Integer.parseInt(bufferedReader.readLine());
+                if (continuePlaying == 1)
+                    protocolChoice = Integer.parseInt(bufferedReader.readLine());
+
             }
 
         } catch (Exception e) {

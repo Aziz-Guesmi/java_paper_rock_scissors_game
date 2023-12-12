@@ -10,10 +10,10 @@ import java.rmi.registry.LocateRegistry;
 
 public class RmiServer {
     public static void main(String[] args) throws RemoteException, MalformedURLException {
-        LocateRegistry.createRegistry(5015);
+        LocateRegistry.createRegistry(5005);
         GameOperations distanceObject = new GameOperationsImpl();
 
         System.out.println(distanceObject.toString());
-        Naming.rebind("rmi://localhost:5015/gameOperations", distanceObject);
+        Naming.rebind("rmi://localhost:5005/gameOperations", distanceObject);
     }
 }

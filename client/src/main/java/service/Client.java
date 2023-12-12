@@ -29,19 +29,21 @@ public class Client {
         // choice de protocole
         System.out.println("Please choose a protocol : ");
         int protocolChoice = scanner.nextInt();
-        printWriter.println(protocolChoice);
         String clientId = String.valueOf(UUID.randomUUID());
         printWriter.println(clientId);
 
         int continuePlaying = 1;
-        while (continuePlaying != 3) {
+        while (protocolChoice != 3) {
             printWriter.println(continuePlaying);
+
             if (continuePlaying == 1) {
+                printWriter.println(protocolChoice);
+
                 for (int i = 1; i < 4; i++) {
                     System.out.println("Round " + i + " : your turn ");
                     String clientChoice = scanner.nextLine();
                     while (!containsChoice(clientChoice)) {
-                        System.out.println("Please Enter your choice again");
+                        System.out.println("Please Enter your choice ");
                         clientChoice = scanner.nextLine();
                     }
                     printWriter.println(clientChoice);
@@ -67,6 +69,12 @@ public class Client {
 
             // TODO : control saisie
             continuePlaying = scanner.nextInt();
+            if(continuePlaying == 1 )
+            {    printMenu("Menu", "RMI", "RPC", "Quit");
+                protocolChoice = scanner.nextInt();
+
+
+            }
 
         }
 
