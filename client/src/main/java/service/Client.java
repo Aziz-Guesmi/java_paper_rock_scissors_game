@@ -9,15 +9,12 @@ import java.rmi.NotBoundException;
 import java.util.Scanner;
 import java.util.UUID;
 
-enum Choice {
-    ROCK,
-    PAPER,
-    SCISSORS
-}
+import static utils.Utils.containsChoice;
+import static utils.Utils.printMenu;
 
 public class Client {
 
-    public static void main(String[] args) throws IOException, NotBoundException {
+    public static void main(String[] args) throws IOException {
 
         Scanner scanner = new Scanner(System.in);
         Socket socket = new Socket("localhost", 5008);
@@ -69,19 +66,5 @@ public class Client {
         socket.close();
     }
 
-    static void printMenu(String... args) {
-        System.out.println("---------Menu--------");
-        for (int i = 1; i < args.length; i++) {
-            System.out.println(i + "/- " + args[i]);
-        }
-    }
 
-    private static boolean containsChoice(String test) {
-        for (Choice choice : Choice.values()) {
-            if (choice.name().equals(test.toUpperCase())) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
