@@ -23,8 +23,7 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 public class ClientHandler extends Thread {
 
-    private Socket socket;
-    private String protocol;
+    private final Socket socket;
 
     public ClientHandler(Socket socket) throws Exception, NotBoundException {
         this.socket = socket;
@@ -34,15 +33,9 @@ public class ClientHandler extends Thread {
     public void run() {
         try {
             InputStreamReader in = new InputStreamReader(socket.getInputStream());
-
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-          //  PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-            // this is not needed cuz server response is read using rmi and rpc methods
-            //ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-
            BufferedReader bufferedReader = new BufferedReader(in);
 
-            // le choice
             int protocolChoice = Integer.parseInt(bufferedReader.readLine());
             String sessionId = bufferedReader.readLine();
 
@@ -63,10 +56,7 @@ public class ClientHandler extends Thread {
                     else{
                         for (int i = 0; i < 3; i++) {
                             String clientChoice = bufferedReader.readLine();
-
-                            //     result = operations.playRound(clientChoice, sessionId, gameId);
                             serverResponse = operations.playRound(clientChoice, sessionId, gameId);
-
                             objectOutputStream.writeObject(serverResponse);
                             if (serverResponse.getGame().getWinner() != null)
                                 break;
@@ -85,7 +75,6 @@ public class ClientHandler extends Thread {
                     if (continuePlaying == 2) {
                         serverResponse = (ServerResponse) client.execute("Game.getHistory",
                                 new Object[] { sessionId });
-                       // printWriter.println(result);
                         objectOutputStream.writeObject(serverResponse);
 
                     } else
@@ -96,18 +85,14 @@ public class ClientHandler extends Thread {
 
                           //  printWriter.println(result);
                             objectOutputStream.writeObject(serverResponse);
-
-
                         }
 
                 }
-
                 else {
-                    throw new RuntimeException("Unknown protocol: " + protocol);
+                    throw new RuntimeException("Unknown protocol: " + protocolChoice);
                 }
 
                 continuePlaying = Integer.parseInt(bufferedReader.readLine());
-
             }
 
         } catch (Exception e) {

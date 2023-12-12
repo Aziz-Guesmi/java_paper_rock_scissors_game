@@ -76,7 +76,6 @@ public class GameState  implements Serializable {
         }
 
         if (this.getHistory().size() == 2) {
-            System.out.println("history setting winner ");
             if (clientWins > serverWins && clientWins == 2) {
                 setWinner(Winner.CLIENT);
             } else if (serverWins > clientWins && serverWins == 2)
