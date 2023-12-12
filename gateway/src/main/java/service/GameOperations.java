@@ -10,4 +10,6 @@ public interface GameOperations extends Remote {
 
     public ServerResponse getHistory(String sessionId) throws RemoteException;
 
+
+
 }

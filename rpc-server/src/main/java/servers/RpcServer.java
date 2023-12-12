@@ -6,7 +6,7 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.server.PropertyHandlerMapping;
 import org.apache.xmlrpc.server.XmlRpcServer;
 import org.apache.xmlrpc.webserver.WebServer;
-import serviceImpl.GameOperationsImpl;
+import serviceImpl.GameOperationsImplRpc;
 
 public class RpcServer {
     public static void main(String[] args) throws XmlRpcException, IOException {
@@ -16,7 +16,7 @@ public class RpcServer {
 
         PropertyHandlerMapping phm = new PropertyHandlerMapping();
 
-        phm.addHandler("Game", GameOperationsImpl.class);
+        phm.addHandler("Game", GameOperationsImplRpc.class);
 
         xmlRpcServer.setHandlerMapping(phm);
         webServer.start();

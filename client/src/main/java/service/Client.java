@@ -33,7 +33,7 @@ public class Client {
         printWriter.println(clientId);
 
         int continuePlaying = 1;
-        while (protocolChoice != 3) {
+        while ((protocolChoice != 3) && (continuePlaying != 3)) {
             printWriter.println(continuePlaying);
 
             if (continuePlaying == 1) {
@@ -75,7 +75,6 @@ public class Client {
 
 
             }
-
         }
 
         // close

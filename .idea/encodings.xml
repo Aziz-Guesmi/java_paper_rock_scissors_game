@@ -7,6 +7,8 @@
     <file url="file://$PROJECT_DIR$/gateway/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-rmi-server/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-rmi-server/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rpc-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rpc-server/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>

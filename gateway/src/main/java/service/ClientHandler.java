@@ -41,7 +41,6 @@ public class ClientHandler extends Thread {
             int continuePlaying = Integer.parseInt(bufferedReader.readLine());
             int protocolChoice = Integer.parseInt(bufferedReader.readLine());
 
-            //  System.out.println("continue playing " + continuePlaying);
             while (protocolChoice != 3) {
                 System.out.println(" playing ");
                 ServerResponse serverResponse = new ServerResponse();
@@ -65,26 +64,32 @@ public class ClientHandler extends Thread {
                 } else if (protocolChoice == 2) {
                     String gameId = String.valueOf(UUID.randomUUID());
                     XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-                    config.setServerURL(new URL("http://localhost:5006/xmlrpc"));
+                    config.setServerURL(new URL("http://localhost:5007/xmlrpc"));
                     XmlRpcClient client = new XmlRpcClient();
                     client.setConfig(config);
                     if (continuePlaying == 2) {
-                        serverResponse = (ServerResponse) client.execute("Game.getHistory",
+                       String response = (String) client.execute("Game.getHistory",
                                 new Object[] { sessionId });
+                       System.out.println(" response string " + response);
                         objectOutputStream.writeObject(serverResponse);
 
                     } else
+
                         for (int i = 0; i < 3; i++) {
                             String clientChoice = bufferedReader.readLine();
-                            serverResponse = (ServerResponse) client.execute("Game.playRound",
+                            String response = (String) client.execute("Game.playRound",
                                         new Object[] { clientChoice, sessionId, gameId });
+                            System.out.println(" response string " + response);
                             objectOutputStream.writeObject(serverResponse);
                             if (serverResponse.getGame().getWinner() != null)
                                 break;
                         }
                 }
                 else {
+                    System.out.println("execption ");
+
                     throw new RuntimeException("Unknown protocol: " + protocolChoice);
+
                 }
 
                 continuePlaying = Integer.parseInt(bufferedReader.readLine());
