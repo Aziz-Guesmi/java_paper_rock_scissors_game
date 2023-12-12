@@ -17,7 +17,7 @@ public class Client {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         Scanner scanner = new Scanner(System.in);
-        Socket socket = new Socket("localhost", 5008);
+        Socket socket = new Socket("localhost", 5019);
 
         PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
       //  InputStreamReader in = new InputStreamReader(socket.getInputStream());

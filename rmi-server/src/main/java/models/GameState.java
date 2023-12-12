@@ -3,6 +3,8 @@ package models;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GameState implements Serializable {
     private String id;
@@ -114,4 +116,56 @@ public class GameState implements Serializable {
                 ", winner=" + winner +
                 '}';
     }
+
+    // Parser method for GameState
+    public static GameState parseFromString(String input) {
+        GameState gameState = new GameState();
+
+        // Parse id
+        Pattern idPattern = Pattern.compile("id='(.+?)'");
+        Matcher idMatcher = idPattern.matcher(input);
+        if (idMatcher.find()) {
+            gameState.id = idMatcher.group(1);
+        }
+
+        // Parse history
+        Pattern historyPattern = Pattern.compile("history=\\[([^\\]]+)\\]");
+        Matcher historyMatcher = historyPattern.matcher(input);
+        if (historyMatcher.find()) {
+            gameState.history = parseHistory(historyMatcher.group(1));
+        }
+
+        // Parse score
+        Pattern scorePattern = Pattern.compile("score='([^']+)'");
+        Matcher scoreMatcher = scorePattern.matcher(input);
+        if (scoreMatcher.find()) {
+            gameState.score = scoreMatcher.group(1);
+        }
+
+        // Parse winner
+        Pattern winnerPattern = Pattern.compile("winner=(\\w+)");
+        Matcher winnerMatcher = winnerPattern.matcher(input);
+        if (winnerMatcher.find()) {
+            gameState.winner = Winner.valueOf(winnerMatcher.group(1).trim());
+        }
+
+
+        return gameState;
+    }
+
+    public static List<Round> parseHistory(String historyString) {
+        List<Round> history = new ArrayList<>();
+
+        // Assume rounds are separated by commas
+        String[] roundStrings = historyString.split(",(?![^\\{]*\\})");
+
+        // Parse each round string and add it to the history list
+        for (String roundString : roundStrings) {
+            Round round = Round.parseFromString(roundString);
+            history.add(round);
+        }
+
+        return history;
+    }
+
 }

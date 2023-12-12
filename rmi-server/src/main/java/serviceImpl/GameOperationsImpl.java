@@ -41,6 +41,10 @@ public class GameOperationsImpl extends UnicastRemoteObject implements GameOpera
         ServerResponse response = new ServerResponse();
         response.setGame(game);
 
+        String responseString = response.toString();
+        ServerResponse parsedResponse = ServerResponse.parseFromString(responseString);
+        System.out.println("here");
+        System.out.println("Final test" + parsedResponse.toString());
         return response;
     }
 

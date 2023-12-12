@@ -12,7 +12,7 @@ public class Gateway {
 
     public static void main(String[] args) throws Exception {
         try {
-            ServerSocket serverSocket = new ServerSocket(5008);
+            ServerSocket serverSocket = new ServerSocket(5019);
             System.out.println("Server is running.");
             while(true) {
                 Socket socket = serverSocket.accept();

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Set the source and destination module paths
-SOURCE_MODULE_PATH="./rpc-rmi-server/src/main/java/models"
-DESTINATION_MODULES=("client" "gateway")
+SOURCE_MODULE_PATH="./rmi-server/src/main/java/models"
+DESTINATION_MODULES=("client" "gateway" "rpc-server")
 
 # Loop through destination modules and copy models
 for MODULE in "${DESTINATION_MODULES[@]}"

@@ -11,7 +11,7 @@
     <modules>
         <module>client</module>
         <module>gateway</module>
-        <module>rpc-rmi-server</module>
+        <module>rmi-server</module>
         <module>rpc-server</module>
     </modules>
 

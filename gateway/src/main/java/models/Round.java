@@ -1,6 +1,8 @@
 package models;
 
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Round implements Serializable {
     Choice client;
@@ -55,5 +57,33 @@ public class Round implements Serializable {
 
     public void setWinner(Winner winner) {
         this.winner = winner;
+    }
+
+    // Parser method for Round
+    public static Round parseFromString(String input) {
+        Round round = new Round();
+
+        // Parse client
+        Pattern clientPattern = Pattern.compile("client=(.+?),");
+        Matcher clientMatcher = clientPattern.matcher(input);
+        if (clientMatcher.find()) {
+            round.client = Choice.valueOf(clientMatcher.group(1));
+        }
+
+        // Parse server
+        Pattern serverPattern = Pattern.compile("server=(.+?),");
+        Matcher serverMatcher = serverPattern.matcher(input);
+        if (serverMatcher.find()) {
+            round.server = Choice.valueOf(serverMatcher.group(1));
+        }
+
+        // Parse winner
+        Pattern winnerPattern = Pattern.compile("winner=(.+?)");
+        Matcher winnerMatcher = winnerPattern.matcher(input);
+        if (winnerMatcher.find()) {
+            round.winner = Winner.valueOf(winnerMatcher.group(1));
+        }
+
+        return round;
     }
 }

@@ -2,6 +2,7 @@ package serviceImpl;
 
 import models.Choice;
 import models.GameState;
+import models.ServerResponse;
 import models.SessionState;
 import service.GameOperationsRpc;
 
@@ -34,24 +35,17 @@ public class GameOperationsImplRpc extends UnicastRemoteObject implements GameOp
             session.getHistory().add(game);
         }
 
-        if (game.getWinner() != null) {
-            throw new RemoteException("Cannot play when there is already a winner");
-        }
-
         Choice randomChoice = getRandomChoice();
 
         game.playRoundInGame(Choice.valueOf(choice.toUpperCase()), randomChoice);
+        ServerResponse response = new ServerResponse();
+        response.setGame(game);
 
-        String result = game.printPreviousRound();
-        System.out.println("Previous round printed: " + result);
+        String responseString = response.toString();
+        ServerResponse parsedResponse = ServerResponse.parseFromString(responseString);
+        System.out.println("Final test" + parsedResponse.toString());
 
-        if (game.getWinner() != null) {
-            result += game.toString();
-            System.out.println("Game winner found: " + game.getWinner());
-        }
-
-        System.out.println("Exiting playRound method...");
-        return result;
+        return response.toString();
     }
 
 

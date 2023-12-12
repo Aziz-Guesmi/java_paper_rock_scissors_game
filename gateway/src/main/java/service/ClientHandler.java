@@ -64,14 +64,15 @@ public class ClientHandler extends Thread {
                 } else if (protocolChoice == 2) {
                     String gameId = String.valueOf(UUID.randomUUID());
                     XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-                    config.setServerURL(new URL("http://localhost:5007/xmlrpc"));
+                    config.setServerURL(new URL("http://localhost:5050/xmlrpc"));
                     XmlRpcClient client = new XmlRpcClient();
                     client.setConfig(config);
                     if (continuePlaying == 2) {
-                       String response = (String) client.execute("Game.getHistory",
+                       String responseString = (String) client.execute("Game.getHistory",
                                 new Object[] { sessionId });
-                       System.out.println(" response string " + response);
-                        objectOutputStream.writeObject(serverResponse);
+                       System.out.println(" response string " + responseString);
+
+                        objectOutputStream.writeObject(responseString);
 
                     } else
 
