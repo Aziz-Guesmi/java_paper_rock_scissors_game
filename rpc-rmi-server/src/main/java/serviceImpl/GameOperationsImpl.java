@@ -8,12 +8,13 @@ import service.GameOperations;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static utils.Utils.getRandomChoice;
 
 public class GameOperationsImpl extends UnicastRemoteObject implements GameOperations {
 
-    static Map<String, SessionState> state = new HashMap<>();
+    public static Map<String, SessionState> state = new ConcurrentHashMap<>();
 
     public GameOperationsImpl() throws RemoteException {
         super();
@@ -42,14 +43,11 @@ public class GameOperationsImpl extends UnicastRemoteObject implements GameOpera
         game.playRoundInGame(Choice.valueOf(choice.toUpperCase()), randomChoice);
 
         String result = game.printPreviousRound();
-        System.out.println("Previous round printed: " + result);
 
         if (game.getWinner() != null) {
             result += game.toString();
-            System.out.println("Game winner found: " + game.getWinner());
         }
 
-        System.out.println("Exiting playRound method...");
         return result;
     }
 

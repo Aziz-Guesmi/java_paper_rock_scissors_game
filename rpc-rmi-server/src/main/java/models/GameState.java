@@ -5,7 +5,6 @@ import java.util.List;
 
 public class GameState {
     private String id;
-
     private List<Round> history;
     private String score;
     private Winner winner;

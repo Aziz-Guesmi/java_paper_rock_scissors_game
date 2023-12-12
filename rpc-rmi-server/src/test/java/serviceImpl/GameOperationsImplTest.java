@@ -1,7 +1,6 @@
 package serviceImpl;
 
 import models.Choice;
-import models.Winner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -9,7 +8,13 @@ import org.mockito.Mockito;
 import utils.Utils;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -72,7 +77,7 @@ class GameOperationsImplTest {
 
 
     @Test
-    void testGetHistory() throws RemoteException {
+    void testGetHistoryWhenEmpty() throws RemoteException {
         // Mock data for testing
         String sessionId = String.valueOf(UUID.randomUUID());
 
@@ -83,5 +88,55 @@ class GameOperationsImplTest {
         assertNotNull(history);
         assertTrue(history.contains("You didnt play yet"), "History should contain 'You didnt play yet'");
         System.out.println("History: " + history);
+    }
+
+    @Test
+    void testStateOnMultipleClients() throws RemoteException {
+        int numberOfSessions = 10;
+        int numberOfGamesPerSession = 3;
+        for (int i =0; i<numberOfSessions; i++){
+            String sessionId = String.valueOf(UUID.randomUUID());
+            for (int j = 0; j <numberOfGamesPerSession; j++){
+                String gameId = String.valueOf(UUID.randomUUID());
+                String roundResult = gameOperations.playRound("ROCK", sessionId,gameId);
+
+            }
+        }
+        System.out.println("State" + GameOperationsImpl.state);
+        assertEquals(GameOperationsImpl.state.keySet().size(), numberOfSessions);
+    }
+
+    @Test
+    void testStateOnMultipleClientsConcurrently() throws Exception {
+        int numberOfSessions = 10;
+        int numberOfGamesPerSession = 3;
+
+        ExecutorService executorService = Executors.newFixedThreadPool(numberOfSessions);
+
+        List<Future<Void>> futures = new ArrayList<>();
+
+        for (int i = 0; i < numberOfSessions; i++) {
+            String sessionId = String.valueOf(UUID.randomUUID());
+
+            Callable<Void> sessionTask = () -> {
+                for (int j = 0; j < numberOfGamesPerSession; j++) {
+                    String gameId = String.valueOf(UUID.randomUUID());
+                    String roundResult = gameOperations.playRound("ROCK", sessionId, gameId);
+                }
+                return null;
+            };
+
+            futures.add(executorService.submit(sessionTask));
+        }
+
+        // Wait for all tasks to complete
+        for (Future<Void> future : futures) {
+            future.get(); // This will block until the task is completed
+        }
+
+        executorService.shutdown();
+
+        System.out.println("State" + GameOperationsImpl.state);
+        assertEquals(GameOperationsImpl.state.keySet().size(), numberOfSessions);
     }
 }
