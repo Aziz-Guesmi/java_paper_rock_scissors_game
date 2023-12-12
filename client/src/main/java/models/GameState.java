@@ -129,21 +129,21 @@ public class GameState implements Serializable {
         }
 
         // Parse history
-        Pattern historyPattern = Pattern.compile("history=(.+?)");
+        Pattern historyPattern = Pattern.compile("history=\\[([^\\]]+)\\]");
         Matcher historyMatcher = historyPattern.matcher(input);
         if (historyMatcher.find()) {
             gameState.history = parseHistory(historyMatcher.group(1));
         }
 
         // Parse score
-        Pattern scorePattern = Pattern.compile("score='(.+?)'");
+        Pattern scorePattern = Pattern.compile("score='([^']+)'");
         Matcher scoreMatcher = scorePattern.matcher(input);
         if (scoreMatcher.find()) {
             gameState.score = scoreMatcher.group(1);
         }
 
         // Parse winner
-        Pattern winnerPattern = Pattern.compile("winner=(.+?)");
+        Pattern winnerPattern = Pattern.compile("winner=(\\w+)");
         Matcher winnerMatcher = winnerPattern.matcher(input);
         if (winnerMatcher.find()) {
             gameState.winner = Winner.valueOf(winnerMatcher.group(1).trim());
@@ -157,7 +157,7 @@ public class GameState implements Serializable {
         List<Round> history = new ArrayList<>();
 
         // Assume rounds are separated by commas
-        String[] roundStrings = historyString.split(", ");
+        String[] roundStrings = historyString.split(",(?![^\\{]*\\})");
 
         // Parse each round string and add it to the history list
         for (String roundString : roundStrings) {

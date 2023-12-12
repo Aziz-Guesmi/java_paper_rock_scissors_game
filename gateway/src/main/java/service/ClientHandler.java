@@ -70,28 +70,24 @@ public class ClientHandler extends Thread {
                     if (continuePlaying == 2) {
                        String responseString = (String) client.execute("Game.getHistory",
                                 new Object[] { sessionId });
-                       System.out.println(" response string " + responseString);
 
                         objectOutputStream.writeObject(responseString);
-
                     } else
-
                         for (int i = 0; i < 3; i++) {
                             String clientChoice = bufferedReader.readLine();
-                            String response = (String) client.execute("Game.playRound",
+                            String responseString = (String) client.execute("Game.playRound",
                                         new Object[] { clientChoice, sessionId, gameId });
-                            System.out.println(" response string " + response);
+                            System.out.println(" response string " + responseString);
+
+                            ServerResponse parsedResponse = ServerResponse.parseFromString(responseString);
+                            System.out.println("parsed object" + parsedResponse);
                             objectOutputStream.writeObject(serverResponse);
+                            System.out.println("test" + serverResponse.getGame().toString());
                             if (serverResponse.getGame().getWinner() != null)
                                 break;
                         }
                 }
-                else {
-                    System.out.println("execption ");
 
-                    throw new RuntimeException("Unknown protocol: " + protocolChoice);
-
-                }
 
                 continuePlaying = Integer.parseInt(bufferedReader.readLine());
                 if (continuePlaying == 1)

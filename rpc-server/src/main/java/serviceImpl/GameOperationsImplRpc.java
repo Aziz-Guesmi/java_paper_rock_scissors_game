@@ -42,8 +42,7 @@ public class GameOperationsImplRpc extends UnicastRemoteObject implements GameOp
         response.setGame(game);
 
         String responseString = response.toString();
-        ServerResponse parsedResponse = ServerResponse.parseFromString(responseString);
-        System.out.println("Final test" + parsedResponse.toString());
+
 
         return response.toString();
     }

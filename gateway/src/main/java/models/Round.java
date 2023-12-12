@@ -63,27 +63,27 @@ public class Round implements Serializable {
     public static Round parseFromString(String input) {
         Round round = new Round();
 
-        // Parse client
-        Pattern clientPattern = Pattern.compile("client=(.+?),");
-        Matcher clientMatcher = clientPattern.matcher(input);
+        // Extract client
+        Matcher clientMatcher = Pattern.compile("client=([A-Za-z0-9_]+),?").matcher(input);
         if (clientMatcher.find()) {
             round.client = Choice.valueOf(clientMatcher.group(1));
         }
 
-        // Parse server
-        Pattern serverPattern = Pattern.compile("server=(.+?),");
-        Matcher serverMatcher = serverPattern.matcher(input);
+        // Extract server
+        Matcher serverMatcher = Pattern.compile("server=([A-Za-z0-9_]+),?").matcher(input);
         if (serverMatcher.find()) {
             round.server = Choice.valueOf(serverMatcher.group(1));
         }
-
-        // Parse winner
-        Pattern winnerPattern = Pattern.compile("winner=(.+?)");
-        Matcher winnerMatcher = winnerPattern.matcher(input);
+        // Extract winner
+        Matcher winnerMatcher = Pattern.compile("winner=([A-Za-z0-9_]+)").matcher(input);
         if (winnerMatcher.find()) {
-            round.winner = Winner.valueOf(winnerMatcher.group(1));
+            String winnerValue = winnerMatcher.group(1);
+            if ("DRAW".equals(winnerValue)) {
+                round.winner = Winner.DRAW;
+            } else {
+                round.winner = Winner.valueOf(winnerValue);
+            }
         }
-
         return round;
     }
 }
