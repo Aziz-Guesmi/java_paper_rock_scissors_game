@@ -1,6 +1,8 @@
 package models;
 
-public class Round {
+import java.io.Serializable;
+
+public class Round implements Serializable {
     Choice client;
     Choice server;
     Winner winner;

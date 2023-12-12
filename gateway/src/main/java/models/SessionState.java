@@ -1,9 +1,10 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SessionState {
+public class SessionState implements Serializable {
 
     private List<GameState> history;
     private String score;

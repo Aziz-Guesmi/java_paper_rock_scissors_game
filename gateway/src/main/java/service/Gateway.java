@@ -14,7 +14,7 @@ public class Gateway {
         try {
             ServerSocket serverSocket = new ServerSocket(5008);
             System.out.println("Server is running.");
-            while (true) {
+            while(true) {
                 Socket socket = serverSocket.accept();
 
                 System.out.println("New client  connected.");

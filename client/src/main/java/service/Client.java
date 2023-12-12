@@ -28,12 +28,12 @@ public class Client {
 
         // choice de protocole
         System.out.println("Please choose a protocol : ");
-        int choice = scanner.nextInt();
-        printWriter.println(choice);
+        int protocolChoice = scanner.nextInt();
+        printWriter.println(protocolChoice);
         String clientId = String.valueOf(UUID.randomUUID());
         printWriter.println(clientId);
 
-        int continuePlaying = choice;
+        int continuePlaying = 1;
         while (continuePlaying != 3) {
             printWriter.println(continuePlaying);
             if (continuePlaying == 1) {
@@ -46,8 +46,8 @@ public class Client {
                     }
                     printWriter.println(clientChoice);
 
-                //    String serverResponse = bufferedReader.readLine();
                     ServerResponse serverResponse = (ServerResponse) objectInputStream.readObject();
+                    System.out.println(serverResponse.getGame().getPreviousRound());
                     GameState game = serverResponse.getGame();
                    if (game.getWinner() != null){
                        System.out.println("Game ended");

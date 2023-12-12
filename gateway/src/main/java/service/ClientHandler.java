@@ -43,41 +43,39 @@ public class ClientHandler extends Thread {
            BufferedReader bufferedReader = new BufferedReader(in);
 
             // le choice
-            int choice = Integer.parseInt(bufferedReader.readLine());
+            int protocolChoice = Integer.parseInt(bufferedReader.readLine());
             String sessionId = bufferedReader.readLine();
 
             int continuePlaying = Integer.parseInt(bufferedReader.readLine());
+            System.out.println("continue playing " + continuePlaying);
             while (continuePlaying != 3) {
                 System.out.println(" playing ");
                 ServerResponse serverResponse = new ServerResponse();
 
-            //    String result = "";
-                if (choice == 1) {
+                if (protocolChoice == 1) {
                     String gameId = String.valueOf(UUID.randomUUID());
                     GameOperations operations = (GameOperations) Naming.lookup("rmi://localhost:5015/gameOperations");
                     if (continuePlaying == 2) {
                         serverResponse = operations.getHistory(sessionId);
-                      //  result = operations.getHistory(sessionId);
                         objectOutputStream.writeObject(serverResponse);
-                //        printWriter.println(result);
                     }
 
-                    else
+                    else{
                         for (int i = 0; i < 3; i++) {
                             String clientChoice = bufferedReader.readLine();
-                            try {
 
-                           //     result = operations.playRound(clientChoice, sessionId, gameId);
-                                serverResponse = operations.playRound(clientChoice, sessionId, gameId);
-                            } catch (RemoteException e) {
-                                serverResponse.setError("Your game already over");
-                          //      result = "Your game already over";
-                            }
+                            //     result = operations.playRound(clientChoice, sessionId, gameId);
+                            serverResponse = operations.playRound(clientChoice, sessionId, gameId);
+
                             objectOutputStream.writeObject(serverResponse);
+                            if (serverResponse.getGame().getWinner() != null)
+                                break;
 
                         }
+                    }
 
-                } else if (choice == 2) {
+
+                } else if (protocolChoice == 2) {
 
                     String gameId = String.valueOf(UUID.randomUUID());
                     XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
@@ -92,13 +90,10 @@ public class ClientHandler extends Thread {
 
                     } else
                         for (int i = 0; i < 3; i++) {
-                            try {
+
                                 serverResponse = (ServerResponse) client.execute("Game.playRound",
                                         new Object[] { bufferedReader.readLine(), sessionId, gameId });
-                            } catch (RemoteException e) {
-                                serverResponse.setError("Your game already over");
-                           //     serverResponse = "Your game already over";
-                            }
+
                           //  printWriter.println(result);
                             objectOutputStream.writeObject(serverResponse);
 
