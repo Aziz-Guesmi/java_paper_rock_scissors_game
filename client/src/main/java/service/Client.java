@@ -1,9 +1,9 @@
 package service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import models.GameState;
+import models.ServerResponse;
+
+import java.io.*;
 import java.net.Socket;
 import java.rmi.NotBoundException;
 import java.util.Scanner;
@@ -14,14 +14,15 @@ import static utils.Utils.printMenu;
 
 public class Client {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         Scanner scanner = new Scanner(System.in);
         Socket socket = new Socket("localhost", 5008);
 
         PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-        InputStreamReader in = new InputStreamReader(socket.getInputStream());
-        BufferedReader bufferedReader = new BufferedReader(in);
+      //  InputStreamReader in = new InputStreamReader(socket.getInputStream());
+        ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+      //  BufferedReader bufferedReader = new BufferedReader(in);
 
         printMenu("Menu", "RMI", "RPC", "Quit");
 
@@ -45,14 +46,22 @@ public class Client {
                     }
                     printWriter.println(clientChoice);
 
-                    String serverResponse = bufferedReader.readLine();
-                    if (serverResponse.equals("Your game is already over")) {
-                        break;
-                    } else
-                        System.out.println(serverResponse);
+                //    String serverResponse = bufferedReader.readLine();
+                    ServerResponse serverResponse = (ServerResponse) objectInputStream.readObject();
+                    GameState game = serverResponse.getGame();
+                   if (game.getWinner() != null){
+                       System.out.println("Game ended");
+                       System.out.println(game);
+                       break;
+                   }
                 }
-            } else if (continuePlaying == 2)
-                System.out.println(bufferedReader.readLine());
+            } else if (continuePlaying == 2){
+                ServerResponse serverResponse = (ServerResponse) objectInputStream.readObject();
+
+                System.out.println("Printing session history");
+                System.out.println(serverResponse.getSession());
+
+            }
 
             printMenu("Menu", "Continue playing", "Show History", "Quit");
 

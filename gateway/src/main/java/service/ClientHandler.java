@@ -1,5 +1,7 @@
 package service;
 
+import java.io.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,6 +16,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.UUID;
 
+import models.ServerResponse;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -30,10 +33,14 @@ public class ClientHandler extends Thread {
     @Override
     public void run() {
         try {
-
-            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
             InputStreamReader in = new InputStreamReader(socket.getInputStream());
-            BufferedReader bufferedReader = new BufferedReader(in);
+
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+          //  PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+            // this is not needed cuz server response is read using rmi and rpc methods
+            //ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+
+           BufferedReader bufferedReader = new BufferedReader(in);
 
             // le choice
             int choice = Integer.parseInt(bufferedReader.readLine());
@@ -42,13 +49,17 @@ public class ClientHandler extends Thread {
             int continuePlaying = Integer.parseInt(bufferedReader.readLine());
             while (continuePlaying != 3) {
                 System.out.println(" playing ");
-                String result = "";
+                ServerResponse serverResponse = new ServerResponse();
+
+            //    String result = "";
                 if (choice == 1) {
                     String gameId = String.valueOf(UUID.randomUUID());
                     GameOperations operations = (GameOperations) Naming.lookup("rmi://localhost:5015/gameOperations");
                     if (continuePlaying == 2) {
-                        result = operations.getHistory(sessionId);
-                        printWriter.println(result);
+                        serverResponse = operations.getHistory(sessionId);
+                      //  result = operations.getHistory(sessionId);
+                        objectOutputStream.writeObject(serverResponse);
+                //        printWriter.println(result);
                     }
 
                     else
@@ -56,12 +67,13 @@ public class ClientHandler extends Thread {
                             String clientChoice = bufferedReader.readLine();
                             try {
 
-                                result = operations.playRound(clientChoice, sessionId, gameId);
-
+                           //     result = operations.playRound(clientChoice, sessionId, gameId);
+                                serverResponse = operations.playRound(clientChoice, sessionId, gameId);
                             } catch (RemoteException e) {
-                                result = "Your game already over";
+                                serverResponse.setError("Your game already over");
+                          //      result = "Your game already over";
                             }
-                            printWriter.println(result);
+                            objectOutputStream.writeObject(serverResponse);
 
                         }
 
@@ -73,18 +85,23 @@ public class ClientHandler extends Thread {
                     XmlRpcClient client = new XmlRpcClient();
                     client.setConfig(config);
                     if (continuePlaying == 2) {
-                        result = (String) client.execute("Game.getHistory",
+                        serverResponse = (ServerResponse) client.execute("Game.getHistory",
                                 new Object[] { sessionId });
-                        printWriter.println(result);
+                       // printWriter.println(result);
+                        objectOutputStream.writeObject(serverResponse);
+
                     } else
                         for (int i = 0; i < 3; i++) {
                             try {
-                                result = (String) client.execute("Game.playRound",
+                                serverResponse = (ServerResponse) client.execute("Game.playRound",
                                         new Object[] { bufferedReader.readLine(), sessionId, gameId });
                             } catch (RemoteException e) {
-                                result = "Your game already over";
+                                serverResponse.setError("Your game already over");
+                           //     serverResponse = "Your game already over";
                             }
-                            printWriter.println(result);
+                          //  printWriter.println(result);
+                            objectOutputStream.writeObject(serverResponse);
+
 
                         }
 

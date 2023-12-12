@@ -2,6 +2,7 @@ package serviceImpl;
 
 import models.Choice;
 import models.GameState;
+import models.ServerResponse;
 import models.SessionState;
 import service.GameOperations;
 
@@ -21,7 +22,7 @@ public class GameOperationsImpl extends UnicastRemoteObject implements GameOpera
     }
 
     @Override
-    public String playRound(String choice, String sessionId, String gameId) throws RemoteException {
+    public ServerResponse playRound(String choice, String sessionId, String gameId) throws RemoteException {
 
         SessionState session = state.computeIfAbsent(sessionId, k -> new SessionState());
 
@@ -34,32 +35,27 @@ public class GameOperationsImpl extends UnicastRemoteObject implements GameOpera
             session.getHistory().add(game);
         }
 
-        if (game.getWinner() != null) {
-            throw new RemoteException("Cannot play when there is already a winner");
-        }
-
         Choice randomChoice = getRandomChoice();
 
         game.playRoundInGame(Choice.valueOf(choice.toUpperCase()), randomChoice);
+        ServerResponse response = new ServerResponse();
+        response.setGame(game);
 
-        String result = game.printPreviousRound();
-
-        if (game.getWinner() != null) {
-            result += game.toString();
-        }
-
-        return result;
+        return response;
     }
 
 
-    public String getHistory(String sessionId) throws RemoteException
+    public ServerResponse getHistory(String sessionId) throws RemoteException
 
     {
+        ServerResponse response = new ServerResponse();
         SessionState session = state.get(sessionId);
+        response.setSession(state.get(sessionId));
+
         if (session == null) {
-            return "You didnt play yet";
+            response.setError("You have not played yet!");
         }
-        return session.getHistory().toString();
+        return response;
 
     }
 
