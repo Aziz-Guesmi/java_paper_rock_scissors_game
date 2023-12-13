@@ -59,6 +59,7 @@ public class Client {
                 }
             } else if (continuePlaying == 2){
                 ServerResponse serverResponse = (ServerResponse) objectInputStream.readObject();
+                System.out.println(serverResponse.getSession());
                 System.out.println("alo");
             }
 
