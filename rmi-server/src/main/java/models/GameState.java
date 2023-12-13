@@ -143,17 +143,30 @@ public class GameState implements Serializable {
         }
 
         // Parse winner
-        Pattern winnerPattern = Pattern.compile("winner=([^,}]+)\\}");
+     /*   Pattern winnerPattern = Pattern.compile("winner=(.*?)}$");
         Matcher winnerMatcher = winnerPattern.matcher(input);
         if (winnerMatcher.find()) {
             String match = winnerMatcher.group(1);
-            if (match == null){
+            if (match == null || match.equals("null")){
                 gameState.winner = null;
-            }else{
+            } else {
                 gameState.winner = Winner.valueOf(match);
             }
-        }
+        }*/
+        int winnerIndex = input.lastIndexOf("winner=");
 
+// Check if "winner=" is found in the string
+        if (winnerIndex != -1) {
+            // Extract the substring starting from "winner=" until the next '}'
+            String winnerSubstring = input.substring(winnerIndex + "winner=".length(), input.indexOf('}', winnerIndex));
+
+            // Remove leading and trailing whitespaces, and assign the result to gameState.winner
+            String winner = winnerSubstring.trim();
+            if (winner.equals("null") )
+                gameState.winner=null;
+            else
+                gameState.winner = Winner.valueOf(winner);
+        }
 
 
         return gameState;

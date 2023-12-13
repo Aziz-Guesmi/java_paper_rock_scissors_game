@@ -77,12 +77,9 @@ public class ClientHandler extends Thread {
                             String clientChoice = bufferedReader.readLine();
                             String responseString = (String) client.execute("Game.playRound",
                                         new Object[] { clientChoice, sessionId, gameId });
-                            System.out.println(" response string " + responseString);
 
                             ServerResponse parsedResponse = ServerResponse.parseFromString(responseString);
-                            System.out.println("parsed object" + parsedResponse);
                             objectOutputStream.writeObject(parsedResponse);
-                            System.out.println("test" + parsedResponse.getGame().toString());
                             if (parsedResponse.getGame().getWinner() != null)
                                 break;
                         }

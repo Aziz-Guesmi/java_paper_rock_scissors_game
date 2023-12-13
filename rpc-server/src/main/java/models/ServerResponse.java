@@ -59,26 +59,14 @@ public class ServerResponse implements Serializable {
             // Add "error" to parts
             parts.add(serverResponseMatcher.group(3).trim());
         }
-        System.out.println("parts" + parts);
 
         // Parse Game State
         Pattern gameStatePattern = Pattern.compile("GameState\\{id='([^']+)', history=\\[([^\\]]+)\\], score='([^']+)', winner=([^}]+)\\}");
         Matcher gameStateMatcher = gameStatePattern.matcher(parts.get(0));
 
-        Pattern gameStatePatterntwo = Pattern.compile("GameState\\{id='([^']+)', history=\\[([^\\]]+)\\], score='([^']+)', winner=([^}]+)\\}");
-        Matcher gameStateMatchertwo = gameStatePattern.matcher(input);
         if (gameStateMatcher.find()) {
-            String id = gameStateMatcher.group(1);
-            String history = gameStateMatcher.group(2);
-            String score = gameStateMatcher.group(3);
-            String winner = gameStateMatcher.group(4);
 
-            System.out.println("ID: " + id);
-            System.out.println("History: " + history);
-            System.out.println("Score: " + score);
-            System.out.println("Winner: " + winner);
             serverResponse.game = GameState.parseFromString(parts.get(0));
-         //   serverResponse.game = parseGameState(gameStateMatcher.group(1));
         }
 
       /*  // Parse Session State

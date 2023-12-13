@@ -40,10 +40,7 @@ public class GameOperationsImplRpc extends UnicastRemoteObject implements GameOp
         game.playRoundInGame(Choice.valueOf(choice.toUpperCase()), randomChoice);
         ServerResponse response = new ServerResponse();
         response.setGame(game);
-
-        String responseString = response.toString();
-
-
+        ServerResponse tempResp = ServerResponse.parseFromString(response.toString());
         return response.toString();
     }
 

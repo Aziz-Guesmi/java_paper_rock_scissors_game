@@ -60,7 +60,6 @@ public class Client {
             } else if (continuePlaying == 2){
                 ServerResponse serverResponse = (ServerResponse) objectInputStream.readObject();
 
-
             }
 
             printMenu("Menu", "Continue playing", "Show History", "Quit");
