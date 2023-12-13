@@ -143,11 +143,17 @@ public class GameState implements Serializable {
         }
 
         // Parse winner
-        Pattern winnerPattern = Pattern.compile("winner=(\\w+)");
+        Pattern winnerPattern = Pattern.compile("winner=([^,}]+)\\}");
         Matcher winnerMatcher = winnerPattern.matcher(input);
         if (winnerMatcher.find()) {
-            gameState.winner = Winner.valueOf(winnerMatcher.group(1).trim());
+            String match = winnerMatcher.group(1);
+            if (match == null){
+                gameState.winner = null;
+            }else{
+                gameState.winner = Winner.valueOf(match);
+            }
         }
+
 
 
         return gameState;

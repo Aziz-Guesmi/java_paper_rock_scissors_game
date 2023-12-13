@@ -81,9 +81,9 @@ public class ClientHandler extends Thread {
 
                             ServerResponse parsedResponse = ServerResponse.parseFromString(responseString);
                             System.out.println("parsed object" + parsedResponse);
-                            objectOutputStream.writeObject(serverResponse);
-                            System.out.println("test" + serverResponse.getGame().toString());
-                            if (serverResponse.getGame().getWinner() != null)
+                            objectOutputStream.writeObject(parsedResponse);
+                            System.out.println("test" + parsedResponse.getGame().toString());
+                            if (parsedResponse.getGame().getWinner() != null)
                                 break;
                         }
                 }
