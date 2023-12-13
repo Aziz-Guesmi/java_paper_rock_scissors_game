@@ -78,7 +78,7 @@ public class ServerResponse implements Serializable {
         }
 
         // Parse Error
-    //    serverResponse.error = parts.get(2);
+        //    serverResponse.error = parts.get(2);
 
         return serverResponse;
     }

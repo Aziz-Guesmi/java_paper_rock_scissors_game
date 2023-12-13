@@ -52,13 +52,15 @@ public class SessionState implements Serializable {
     public static SessionState parseFromString(String input) {
         SessionState sessionState = new SessionState();
 
-        // Parse history
-        Pattern historyPattern = Pattern.compile("history=(.+?)");
-        Matcher historyMatcher = historyPattern.matcher(input);
-        if (historyMatcher.find()) {
-         //   sessionState.setHistory();
-            sessionState.setHistory(parseGameHistory(historyMatcher.group(1)));
-
+        String historyKey = "history=[";
+        int startIndex = input.indexOf(historyKey);
+        if (startIndex != -1) {
+            startIndex += historyKey.length();
+            int endIndex = input.lastIndexOf(']');
+            if (endIndex != -1) {
+                String historyContent = input.substring(startIndex, endIndex);
+                sessionState.setHistory(parseGameHistory(historyContent));
+            }
         }
 
         // Parse score
@@ -79,19 +81,33 @@ public class SessionState implements Serializable {
     }
 
     private static List<GameState> parseGameHistory(String historyString) {
-        List<GameState> history = new ArrayList<>();
 
-        // Assume game states are separated by commas
-        String[] gameStateStrings = historyString.split(", ");
+        List<String> gameStateStrings = splitGameStateStrings(historyString);
+        List<GameState> result = new ArrayList<>();
 
-        // Parse each game state string and add it to the history list
+        // Print the parsed game states
         for (String gameStateString : gameStateStrings) {
-            GameState gameState = GameState.parseFromString(gameStateString);
-            history.add(gameState);
+            System.out.println(GameState.parseFromString(gameStateString));
+            result.add(GameState.parseFromString(gameStateString));
         }
 
-        return history;
+        return result;
     }
 
+    private static List<String> splitGameStateStrings(String input) {
+        List<String> gameStateStrings = new ArrayList<>();
+
+        // Split the input string based on the word "GameState"
+        String[] parts = input.split("GameState");
+
+        // Add each substring to the list, excluding the empty ones
+        for (String part : parts) {
+            if (!part.trim().isEmpty()) {
+                gameStateStrings.add("GameState" + part.trim());
+            }
+        }
+
+        return gameStateStrings;
+    }
 
 }

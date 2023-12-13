@@ -59,7 +59,7 @@ public class Client {
                 }
             } else if (continuePlaying == 2){
                 ServerResponse serverResponse = (ServerResponse) objectInputStream.readObject();
-
+                System.out.println("alo");
             }
 
             printMenu("Menu", "Continue playing", "Show History", "Quit");
