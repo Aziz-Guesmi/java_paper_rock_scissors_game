@@ -70,8 +70,10 @@ public class ClientHandler extends Thread {
                     if (continuePlaying == 2) {
                        String responseString = (String) client.execute("Game.getHistory",
                                 new Object[] { sessionId });
-
-                        objectOutputStream.writeObject(responseString);
+                        System.out.println("string" + responseString);
+                        ServerResponse responseParsed = ServerResponse.parseFromString(responseString);
+                        System.out.println("history" + responseParsed.toString());
+                        objectOutputStream.writeObject(responseParsed);
                     } else
                         for (int i = 0; i < 3; i++) {
                             String clientChoice = bufferedReader.readLine();

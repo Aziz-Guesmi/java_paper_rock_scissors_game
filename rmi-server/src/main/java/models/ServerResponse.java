@@ -74,11 +74,11 @@ public class ServerResponse implements Serializable {
         Matcher sessionStateMatcher = sessionStatePattern.matcher(parts.get(1));
         if (sessionStateMatcher.find()) {
 
-            serverResponse.session = SessionState.parseFromString(sessionStateMatcher.group(1));
+            serverResponse.session = SessionState.parseFromString(parts.get(1));
         }
 
         // Parse Error
-    //    serverResponse.error = parts.get(2);
+        //    serverResponse.error = parts.get(2);
 
         return serverResponse;
     }

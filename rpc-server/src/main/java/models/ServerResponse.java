@@ -69,14 +69,13 @@ public class ServerResponse implements Serializable {
             serverResponse.game = GameState.parseFromString(parts.get(0));
         }
 
-      /*  // Parse Session State
+        // Parse Session State
         Pattern sessionStatePattern = Pattern.compile("SessionState\\{(.+?)\\}");
         Matcher sessionStateMatcher = sessionStatePattern.matcher(parts.get(1));
         if (sessionStateMatcher.find()) {
-            serverResponse.game = GameState.parseFromString(gameStateMatcher.group(1));
 
-            serverResponse.session = SessionState.parseFromString(sessionStateMatcher.group(1));
-        }*/
+            serverResponse.session = SessionState.parseFromString(parts.get(1));
+        }
 
         // Parse Error
     //    serverResponse.error = parts.get(2);

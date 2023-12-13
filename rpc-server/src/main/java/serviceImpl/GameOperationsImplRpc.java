@@ -52,7 +52,14 @@ public class GameOperationsImplRpc extends UnicastRemoteObject implements GameOp
         if (session == null) {
             return "You didnt play yet";
         }
-        return session.getHistory().toString();
+        ServerResponse response = new ServerResponse();
+        response.setSession(session);
+        String result = response.toString();
+
+        ServerResponse testParsing = ServerResponse.parseFromString(result);
+        System.out.println("test parsing "+testParsing);
+
+        return result;
 
     }
 
