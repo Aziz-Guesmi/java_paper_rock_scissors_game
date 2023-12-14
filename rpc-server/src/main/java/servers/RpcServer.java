@@ -11,7 +11,7 @@ import serviceImpl.GameOperationsImplRpc;
 public class RpcServer {
     public static void main(String[] args) throws XmlRpcException, IOException {
 
-        WebServer webServer = new WebServer(5050);
+        WebServer webServer = new WebServer(5055);
         XmlRpcServer xmlRpcServer = webServer.getXmlRpcServer();
 
         PropertyHandlerMapping phm = new PropertyHandlerMapping();

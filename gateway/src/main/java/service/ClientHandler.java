@@ -34,7 +34,7 @@ public class ClientHandler extends Thread {
         try {
             InputStreamReader in = new InputStreamReader(socket.getInputStream());
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-           BufferedReader bufferedReader = new BufferedReader(in);
+            BufferedReader bufferedReader = new BufferedReader(in);
 
             String sessionId = bufferedReader.readLine();
 
@@ -42,7 +42,6 @@ public class ClientHandler extends Thread {
             int protocolChoice = Integer.parseInt(bufferedReader.readLine());
 
             while (protocolChoice != 3) {
-                System.out.println(" playing ");
                 ServerResponse serverResponse = new ServerResponse();
 
                 if (protocolChoice == 1) {
@@ -51,8 +50,7 @@ public class ClientHandler extends Thread {
                     if (continuePlaying == 2) {
                         serverResponse = operations.getHistory(sessionId);
                         objectOutputStream.writeObject(serverResponse);
-                    }
-                    else{
+                    } else {
                         for (int i = 0; i < 3; i++) {
                             String clientChoice = bufferedReader.readLine();
                             serverResponse = operations.playRound(clientChoice, sessionId, gameId);
@@ -64,11 +62,11 @@ public class ClientHandler extends Thread {
                 } else if (protocolChoice == 2) {
                     String gameId = String.valueOf(UUID.randomUUID());
                     XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-                    config.setServerURL(new URL("http://localhost:5050/xmlrpc"));
+                    config.setServerURL(new URL("http://localhost:5055/xmlrpc"));
                     XmlRpcClient client = new XmlRpcClient();
                     client.setConfig(config);
                     if (continuePlaying == 2) {
-                       String responseString = (String) client.execute("Game.getHistory",
+                        String responseString = (String) client.execute("Game.getHistory",
                                 new Object[] { sessionId });
                         System.out.println("string" + responseString);
                         ServerResponse responseParsed = ServerResponse.parseFromString(responseString);
@@ -78,7 +76,7 @@ public class ClientHandler extends Thread {
                         for (int i = 0; i < 3; i++) {
                             String clientChoice = bufferedReader.readLine();
                             String responseString = (String) client.execute("Game.playRound",
-                                        new Object[] { clientChoice, sessionId, gameId });
+                                    new Object[] { clientChoice, sessionId, gameId });
 
                             ServerResponse parsedResponse = ServerResponse.parseFromString(responseString);
                             objectOutputStream.writeObject(parsedResponse);
@@ -86,7 +84,6 @@ public class ClientHandler extends Thread {
                                 break;
                         }
                 }
-
 
                 continuePlaying = Integer.parseInt(bufferedReader.readLine());
                 if (continuePlaying == 1)

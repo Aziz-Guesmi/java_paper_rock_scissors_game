@@ -39,12 +39,12 @@ public class GameOperationsImpl extends UnicastRemoteObject implements GameOpera
 
         game.playRoundInGame(Choice.valueOf(choice.toUpperCase()), randomChoice);
         ServerResponse response = new ServerResponse();
-        response.setSession(session);
         response.setGame(game);
 
         String responseString = response.toString();
         ServerResponse parsedResponse = ServerResponse.parseFromString(responseString);
-
+        System.out.println("here");
+        System.out.println("Final test" + parsedResponse.toString());
         return response;
     }
 

@@ -49,11 +49,11 @@ public class Client {
                     printWriter.println(clientChoice);
 
                     ServerResponse serverResponse = (ServerResponse) objectInputStream.readObject();
-                    System.out.println(serverResponse.getGame().getPreviousRound());
+                    System.out.println(serverResponse.getGame().getPreviousRound().toString().trim());
                     GameState game = serverResponse.getGame();
                    if (game.getWinner() != null){
                        System.out.println("Game ended");
-                       System.out.println(game);
+                       System.out.println(game.toString().trim());
                        break;
                    }
                 }

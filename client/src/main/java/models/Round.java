@@ -28,7 +28,7 @@ public class Round implements Serializable {
 
     @Override
     public String toString() {
-        return "Round{" +
+        return "\n  Round{" +
                 "client=" + client +
                 ", server=" + server +
                 ", winner=" + winner +

@@ -109,12 +109,12 @@ public class GameState implements Serializable {
 
     @Override
     public String toString() {
-        return "GameState{" +
-                "id='" + id + '\'' +
-                ", history=" + history +
-                ", score='" + score + '\'' +
-                ", winner=" + winner +
-                '}';
+        return "   GameState{\n" +
+                "   id='" + id + "',\n" +
+                "history=" + history + ",\n"+
+                "score=" + score + ",\n" +
+                "winner=" + winner +
+                "   }\n".trim();
     }
 
     // Parser method for GameState

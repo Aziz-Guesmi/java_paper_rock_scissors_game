@@ -43,9 +43,10 @@ public class SessionState implements Serializable {
     @Override
     public String toString() {
         return "SessionState{" +
-                "history=" + history +
-                ", score='" + score + '\'' +
-                ", winner='" + winner + '\'' +
+                "history=" + history.toString().trim() +
+                ",\n"+ ", score='" +
+       //         score + '\'' + ",\n"+
+     //           ", winner='" + winner + '\'' +
                 '}';
     }
 
